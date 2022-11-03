@@ -13,6 +13,7 @@ typedef struct thread_param{
     int index;
     int mx_size;
     struct random_data * random_state;
+    pthread_mutex_t mut;
 }thread_param;
 
 int**matrix;
@@ -45,10 +46,15 @@ void printMx(int** mx, int N, FILE*out){
         }
         fprintf(out, "\n");
     }
+    fprintf(out,"\n");
 }
 
-//mutex init
-pthread_mutex_t mutp = PTHREAD_MUTEX_INITIALIZER;
+void printSeged(int n){
+    for(int i = 0; i < n;i++){
+        printf("%d ",seged[i]);
+    }
+    printf("\n");
+}
 
 //Szalfuggveny
 void *f(void * arg){
@@ -59,11 +65,11 @@ void *f(void * arg){
         random_r(tp->random_state,&r);
         usleep(r%10000);
 
-        #ifdef MUTEX
-        pthread_mutex_lock(&mutp);
-        #endif
+        pthread_mutex_lock(&(tp->mut));
 
         if(seged[tp->index] == 1){
+            printf("----\n");
+            printSeged(tp->mx_size);
             int rowSum=0;
             int colSum=0;
             for(int i = 0; i < tp->mx_size; i++){
@@ -72,11 +78,11 @@ void *f(void * arg){
             }
             printf("%d. thread SOR:%d OSZLOP:%d\n",tp->index,rowSum,colSum);
             seged[tp->index] = 0;
+            printSeged(tp->mx_size);
+            printf("----\n");
         }
 
-        #ifdef MUTEX
-        pthread_mutex_unlock(&mutp);
-        #endif
+        pthread_mutex_unlock(&(tp->mut));
     }
     return NULL;
 }
@@ -86,11 +92,13 @@ int main(int argc, char* argv[]){
     //parameter ellenorzes
     if(argc != 2){
         perror("Hibas parameterezes!\n");
+        return 1;
     }
 
     int N = atoi(argv[1]);
     if(!N){
         perror("Hibas N parameter!\n");
+        return 1;
     }
 
     //Matrix Letrehozas
@@ -105,6 +113,10 @@ int main(int argc, char* argv[]){
     for(i=0;i<N;i++){
         seged[i] = 1;
     }
+
+    //mutexek
+    pthread_mutex_t *mutexek = (pthread_mutex_t*)calloc(N,sizeof(pthread_mutex_t));
+    for(int i = 0;i < N;i++)pthread_mutex_init ( &mutexek[i], NULL);
 
     //Szalak elinditasa
     int NTHREADS = N;
@@ -121,6 +133,7 @@ int main(int argc, char* argv[]){
         tp[i].index = i;
         tp[i].random_state = &rand_states[i];
         tp[i].mx_size = N;
+        tp[i].mut = mutexek[i];
 
         if(pthread_create ((pthread_t *) & threads[i], NULL, f,(void *) &tp[i]) != 0){
         perror("pthread_create hiba");
@@ -143,31 +156,34 @@ int main(int argc, char* argv[]){
             int newVal;
             random_r(&(rand_states[NTHREADS]),&newVal);
 
-            #ifdef MUTEX
-            pthread_mutex_lock(&mutp);
-            #endif  
-                //MUTEX
-                matrix[i][j] = newVal;
+            pthread_mutex_lock(&(mutexek[i]));
+            pthread_mutex_lock(&(mutexek[j]));
+                matrix[i][j] = newVal%MAX_MATRIX_VAL;
                 seged[i] = seged[j] = 1;
-            #ifdef MUTEX
-            pthread_mutex_unlock(&mutp);
-            #endif
+                for(int i = 0; i < N; i++)printf("%d",seged[i]);
+                printf("\n");
+            pthread_mutex_unlock(&(mutexek[i]));
+            pthread_mutex_unlock(&(mutexek[j]));
+
 
             printf("Foszal: Matrix(%d,%d) modositott!\n",i,j);
             printMx(matrix,N,outFile);
             changes++;
         }
-        else if(seged[i] || seged[j]){
+        else {
             printf("Foszal: Matrix(%d,%d) NEM modositott!\n",i,j);
         }
     }
+    printf("*******************************************");
 
+    for(i = 0; i<NTHREADS;i++){ 
+        pthread_cancel(threads[i]);
+    }
     for(i = 0; i<NTHREADS;i++){
         if(pthread_join (threads[i], NULL) != 0){
          perror("pthread_join hiba");
          exit(1);
         }       
-        pthread_cancel(threads[i]);
     }
 
     return 0;
