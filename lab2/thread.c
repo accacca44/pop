@@ -8,6 +8,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define MAX_MATRIX_VAL 10   //matrix maximalis ertekei
 #define BUFFER_SIZE 32
@@ -16,13 +17,14 @@ typedef struct thread_param{
     int index;
     int matrix_size;
     struct random_data*random_state;
-    pthread_mutex_t mut;
 }thread_param;
 
 
 int**matrix;
 int*seged;
 pthread_mutex_t*mutexek;
+pthread_mutex_t M = PTHREAD_MUTEX_INITIALIZER;
+bool finished;
 
 //letrehoz egy N*N-es matrixot random ertekkel
 int** createMatrix(int N){
@@ -42,6 +44,7 @@ int** createMatrix(int N){
     return matrix;
 }
 
+//kirat egy NxN es matrixot
 void printMx(int** mx, int N, FILE*out){
     int i,j;
     for(i =0 ; i < N;i++){
@@ -53,6 +56,7 @@ void printMx(int** mx, int N, FILE*out){
     fprintf(out,"\n");
 }
 
+//kiiratja a segedtombot
 void printSeged(int n){
     for(int i = 0; i < n;i++){
         printf("%d ",seged[i]);
@@ -60,10 +64,11 @@ void printSeged(int n){
     printf("\n");
 }
 
+//Felhasznaloi szalak routineja
 void * routine(void * arg){
     thread_param*tp = (thread_param*)(arg);
 
-    while(1){
+    while(!finished){
         //random ideig alszik
         int sleepTime;
         random_r(tp->random_state,&sleepTime);
@@ -73,7 +78,8 @@ void * routine(void * arg){
 
         int i = tp->index;
         if(seged[i] == 1){
-            pthread_mutex_lock(&mutexek[tp->index]);
+            pthread_mutex_lock(&mutexek[i]);
+            //pthread_mutex_lock(&M);
             printf("----\n");
             printSeged(tp->matrix_size);
             int rowSum=0;
@@ -86,11 +92,10 @@ void * routine(void * arg){
             seged[i] = 0;
             printSeged(tp->matrix_size);
             printf("----\n");
-            pthread_mutex_unlock(&mutexek[tp->index]);
+            pthread_mutex_unlock(&mutexek[i]);
         }
 
 
-        //mutex unlock
     }
 
     return NULL;
@@ -112,6 +117,7 @@ int main(int argc, char* argv[]){
     printMx(matrix,N,outFile);
 
     //Mutexek dinamikus letrehozasa
+    finished = false;
     mutexek = (pthread_mutex_t*)calloc(N,sizeof(pthread_mutex_t));
     for(int i = 0;i < N;i++)pthread_mutex_init(&(mutexek[i]),NULL);
 
@@ -127,7 +133,6 @@ int main(int argc, char* argv[]){
         tp[i].index = i;
         tp[i].matrix_size = N;
         tp[i].random_state = &random_state[i];
-        tp[i].mut = mutexek[i];
 
         if(pthread_create ((pthread_t *) & threads[i], NULL, routine,(void *) &(tp[i])) != 0){
             perror("pthread_create hiba");
@@ -141,7 +146,7 @@ int main(int argc, char* argv[]){
     //A foszal 15 valtoztatas utan leall
     int changes = 0;
     while(changes < 15){
-        sleep(1);
+        usleep(300);
 
         //gerenal random poziciokat
         int i,j;
@@ -150,6 +155,7 @@ int main(int argc, char* argv[]){
         i = i%N;
         j = j%N;
 
+
         //uj eretket ad a tombnek
         int newVal;
         random_r(&(random_state[N]),&newVal);
@@ -157,9 +163,10 @@ int main(int argc, char* argv[]){
         //mutex foglalas helyes olvasashoz
         //segedtomb ellenorzes
         if(seged[i] == 0 && seged[j] == 0){
-        pthread_mutex_lock(&(mutexek[i]));
-        pthread_mutex_lock(&(mutexek[j]));
-        
+            pthread_mutex_lock(&(mutexek[i]));
+            if(i != j)
+                pthread_mutex_lock(&(mutexek[j]));
+
             matrix[i][j] = newVal%MAX_MATRIX_VAL;
             seged[i] = 1;
             seged[j] = 1;
@@ -169,21 +176,21 @@ int main(int argc, char* argv[]){
             changes++;
          
             pthread_mutex_unlock(&(mutexek[i]));
-            pthread_mutex_unlock(&(mutexek[j]));
+            if(i != j)
+                pthread_mutex_unlock(&(mutexek[j]));
         }
         else{
             printf("Foszal: Matrix(%d,%d) NEM modositott!\n",i,j);
         }
-        //mutex felszabaditas
     }
+    finished = true;
 
-    for(int i = 0; i<N;i++)pthread_cancel(threads[i]);
-    /*for(int i = 0; i<N;i++){
+    for(int i = 0; i<N;i++){
         if(pthread_join (threads[i], NULL) != 0){
          perror("pthread_join hiba");
          exit(1);
         }       
-    }*/
+    }
     
 
     return 0;
