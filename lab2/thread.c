@@ -70,10 +70,10 @@ void * routine(void * arg){
         usleep(sleepTime%10000);
 
         //mutex lock
-        pthread_mutex_lock(&mutexek[tp->index]);
 
         int i = tp->index;
         if(seged[i] == 1){
+            pthread_mutex_lock(&mutexek[tp->index]);
             printf("----\n");
             printSeged(tp->matrix_size);
             int rowSum=0;
@@ -86,11 +86,11 @@ void * routine(void * arg){
             seged[i] = 0;
             printSeged(tp->matrix_size);
             printf("----\n");
+            pthread_mutex_unlock(&mutexek[tp->index]);
         }
 
 
         //mutex unlock
-        pthread_mutex_unlock(&mutexek[tp->index]);
     }
 
     return NULL;
@@ -155,11 +155,11 @@ int main(int argc, char* argv[]){
         random_r(&(random_state[N]),&newVal);
 
         //mutex foglalas helyes olvasashoz
-        //pthread_mutex_lock(&(mutexek[i]));
-        //pthread_mutex_lock(&(mutexek[j]));
-        
         //segedtomb ellenorzes
         if(seged[i] == 0 && seged[j] == 0){
+        pthread_mutex_lock(&(mutexek[i]));
+        pthread_mutex_lock(&(mutexek[j]));
+        
             matrix[i][j] = newVal%MAX_MATRIX_VAL;
             seged[i] = 1;
             seged[j] = 1;
@@ -167,13 +167,14 @@ int main(int argc, char* argv[]){
             printf("Foszal: Matrix(%d,%d) modositott!\n",i,j);
             printMx(matrix,N,outFile);
             changes++;
+         
+            pthread_mutex_unlock(&(mutexek[i]));
+            pthread_mutex_unlock(&(mutexek[j]));
         }
         else{
             printf("Foszal: Matrix(%d,%d) NEM modositott!\n",i,j);
         }
         //mutex felszabaditas
-        //pthread_mutex_unlock(&(mutexek[i]));
-        //pthread_mutex_unlock(&(mutexek[j]));
     }
 
     for(int i = 0; i<N;i++)pthread_cancel(threads[i]);
