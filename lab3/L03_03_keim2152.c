@@ -54,7 +54,11 @@ int **createAndCopyMatrix(int**ptr,int n){
 //Kiirat egy adott matrixot a kepernyore
 void printMatrix(int**ptr, int n){
     for(int i = 0; i < n; i++){
-        for(int j = 0; j < n; j++)printf("%d ",ptr[i][j]);
+        for(int j = 0; j < n; j++){
+            if(ptr[i][j] == 1)printf("X");
+            else printf(" ");
+            //printf("%d ",ptr[i][j]);
+        }
         printf("\n");
     }
 }
@@ -109,7 +113,7 @@ void printThreadInfo(int i, int n, int step, bool has_changed){
     printf("%s%s\n",buff1,buff3);
 }
 
-void printMainInfo();
+//void printMainInfo();
 
 
 //Felhasznaloio szalak routine-ja
@@ -137,7 +141,7 @@ void*start_routine(void * arg){
             }
         }
 
-        printThreadInfo(tp->index,tp->size,step,has_changed);
+        //printThreadInfo(tp->index,tp->size,step,has_changed);
 
         if(has_changed){
             sem_wait(&mod_semaphore);
@@ -233,6 +237,8 @@ int main(int argc, char* argv[]){
         sem_post(&mod_semaphore);
 
         //todo
+        sleep(0.5);
+        system("cls");
         printMatrix(matrix,N);
         sem_wait(&mod_semaphore);
         sem_wait(&nrActWorker_semaphore);
