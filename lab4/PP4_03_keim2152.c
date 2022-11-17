@@ -5,21 +5,17 @@ egyes jegypénztárnál váltható jegy bárhová....*/
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <stdbool.h>
-#include <time.h>
-
-#include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
 #include <pthread.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdbool.h>
+#include <sys/time.h>
+#include <errno.h>
 
 #define THREAD_SIZE 5
 #define BUFFER_SIZE 32
+#define TIMEOUT 15
 
 typedef struct param{
     int db_size;
@@ -38,6 +34,7 @@ pthread_mutex_t mutex_finished;
 pthread_cond_t cond_finished;
 bool finished;
 bool time_exeeded;
+
 
 void initDB(int dbSize){
     database = (int*)calloc(dbSize, sizeof(int));
@@ -81,7 +78,6 @@ void * thread_routine(void * arg){
 
     while(!finished){
         pthread_setcancelstate(PTHREAD_CANCEL_DISABLE,NULL);
-        pthread_mutex_lock(&mutex_finished);
 
             
             pthread_mutex_lock(&mutex_database);
@@ -89,15 +85,16 @@ void * thread_routine(void * arg){
             printf("[%d]index %d ",p->index, seatIndex);
             database[seatIndex] = 0;
             printDatabase(p->db_size);
-            pthread_mutex_unlock(&mutex_database);
             
         
-            selled_tickets++;
-            //printf("%d sold  selled ticket:%d\n",p->index, selled_tickets);
+        pthread_mutex_lock(&mutex_finished);
+        selled_tickets++;
             
-
+        if(selled_tickets == p->db_size){
+            pthread_cond_signal(&cond_finished);
+        }
         pthread_mutex_unlock(&mutex_finished);
-        pthread_cond_broadcast(&cond_finished);
+        pthread_mutex_unlock(&mutex_database);
         
 
         pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL);
@@ -116,7 +113,6 @@ int main(int argc, char**argv){
     //N is the size of the database (nr of tickets to sell)
     //T is the maximum time the threads work for
     int N = 50;
-    double T = 5;
     selled_tickets = 0;
 
     finished = false;
@@ -156,17 +152,27 @@ int main(int argc, char**argv){
     }
 
     //start timer
-    time_t start = time(NULL);
-    double elapsed_time;
+    //time_t start = time(NULL);
+    //double elapsed_time;
+
+    struct timeval tv;
+    struct timespec ts;
+    gettimeofday(&tv,NULL);
+    ts.tv_sec = tv.tv_sec + TIMEOUT;
+    ts.tv_nsec = tv.tv_usec * 1000;
+
+    //clock_gettime(CLOCK_REALTIME, (pthread_timestruc_t*)&to);
 
     //main thread waiting for other threads to finish
     pthread_mutex_lock(&mutex_finished);
     while(!time_exeeded && selled_tickets < N){
-        printf("Waiting for threads | elapsed time %f\n",elapsed_time);
-        pthread_cond_wait(&cond_finished, &mutex_finished);
+        printf("Waiting for threads | elapsed time\n");
+        int err = pthread_cond_timedwait(&cond_finished, &mutex_finished,&ts);
         
-        elapsed_time = time(NULL)-start;
-        time_exeeded = (elapsed_time > T);
+        //int err = pthread_cond_timedwait(&c, &m, &ts);
+	if (err == ETIMEDOUT) {
+            time_exeeded = 1;
+        }
     }
     pthread_mutex_unlock(&mutex_finished);
     finished = true;
@@ -178,7 +184,7 @@ int main(int argc, char**argv){
         }
     }*/
 
-    //waiting for the threads to finish*/
+    //waiting for the threads to finish
     for(int i = 0; i < THREAD_SIZE; i++){
         if(pthread_join(threads[i], NULL) != 0){
             printf("%d Thread join failed!\n",i);
