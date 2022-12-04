@@ -78,7 +78,6 @@ void * routine(void * arg){
 
         int i = tp->index;
         if(seged[i] == 1){
-            pthread_mutex_lock(&mutexek[i]);
             //pthread_mutex_lock(&M);
             printf("----\n");
             printSeged(tp->matrix_size);
@@ -89,10 +88,11 @@ void * routine(void * arg){
                 rowSum+=matrix[k][i];
             }
             printf("%d. thread SOR:%d OSZLOP:%d\n",i,rowSum,colSum);
+            pthread_mutex_lock(&mutexek[i]);
             seged[i] = 0;
             printSeged(tp->matrix_size);
-            printf("----\n");
             pthread_mutex_unlock(&mutexek[i]);
+            printf("----\n");
         }
 
 

@@ -1,0 +1,42 @@
+dani@DaniPc:~/Documents/Linux2/Labor/Lab5$ ./kl almafa & ./kl szerver.c & ./kl kliens.c & ./kl temp & sleep 3
+[5] 20248
+[6] 20249
+[7] 20250
+[8] 20251
+[20249] - Client - Sent this filename: szerver.c
+[20248] - Client - Sent this filename: almafa
+[20250] - Client - Sent this filename: kliens.c
+[20248] - Client - I am waiting for answers!
+[20249] - Client - I am waiting for answers!
+[20250] - Client - I am waiting for answers!
+[20251] - Client - Sent this filename: temp
+[20251] - Client - I am waiting for answers!
+'szerver.c' ---> files
+'szerver.c' ---> P11
+'szerver.c' ---> Lab5
+'szerver.c' ---> Msg_POSIX
+[20249] - Client - Server Message Query Closed Succesfully!
+[20249] - Client - My Message Query Closed Succesfully!
+[20249] - Client - My Message Query Deleted Succesfully!
+[20251] - Client ---> The file "temp" is not found in any directoires!
+[20248] - Client ---> The file "almafa" is not found in any directoires!
+[20251] - Client - Server Message Query Closed Succesfully!
+[20248] - Client - Server Message Query Closed Succesfully!
+[20251] - Client - My Message Query Closed Succesfully!
+[20248] - Client - My Message Query Closed Succesfully!
+[20248] - Client - My Message Query Deleted Succesfully!
+[20251] - Client - My Message Query Deleted Succesfully!
+'kliens.c' ---> files
+'kliens.c' ---> P11
+'kliens.c' ---> Lab5
+'kliens.c' ---> Msg_POSIX
+[20250] - Client - Server Message Query Closed Succesfully!
+[20250] - Client - My Message Query Closed Succesfully!
+[20250] - Client - My Message Query Deleted Succesfully!
+[5]   Done                    ./kl almafa
+[6]   Done                    ./kl szerver.c
+[7]-  Done                    ./kl kliens.c
+[8]+  Done                    ./kl temp
+dani@DaniPc:~/Documents/Linux2/Labor/Lab5$ ./stop
+[20303] - STOP - Sent this filename: STOP
+[20303] - STOP - Server Query Closed Succesfully!

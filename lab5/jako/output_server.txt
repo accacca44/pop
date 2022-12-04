@@ -1,0 +1,26 @@
+dani@DaniPc:~/Documents/Linux2/Labor/Lab5$ ./sz
+[Server] - The Server Query is Opened!
+[Server] - I receive a file ->szerver.c<- from [20249] - Client -
+[Server] - I receive a file ->almafa<- from [20248] - Client -
+[Server] - I receive a file ->kliens.c<- from [20250] - Client -
+[0] - Thread I manage the ->[20249]<- Client question!
+[1] - Thread I manage the ->[20248]<- Client question!
+[2] - Thread I manage the ->[20250]<- Client question!
+[Server] - I receive a file ->temp<- from [20251] - Client -
+[0] - Thread sending answers to ->[20249]<- Client!
+[3] - Thread I manage the ->[20251]<- Client question!
+[1] - Thread sending answers to ->[20248]<- Client!
+[2] - Thread sending answers to ->[20250]<- Client!
+[3] - Thread sending answers to ->[20251]<- Client!
+[0] - Thread ended the prcess! Cleaning and Closing...
+[Server] - The [20249] - Client - Query Closed Succesfully!
+[3] - Thread ended the prcess! Cleaning and Closing...
+[1] - Thread ended the prcess! Cleaning and Closing...
+[Server] - The [20251] - Client - Query Closed Succesfully!
+[Server] - The [20248] - Client - Query Closed Succesfully!
+[2] - Thread ended the prcess! Cleaning and Closing...
+[Server] - The [20250] - Client - Query Closed Succesfully!
+[Server] - I receive a file ->STOP<- from [20303] - Client -
+[Server] - Server is stopping!
+[Server] - My Message Query Closed Succesfully!
+[Server] - My Message Query Deleted Succesfully!

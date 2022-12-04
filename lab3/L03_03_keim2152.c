@@ -102,10 +102,12 @@ void printThreadInfo(int i, int n, int step, bool has_changed){
     char buff3[250];
     sprintf(buff1, "[%d] szal, %d. lepes, [",i,step);
     for(int k = 0; k < n;k++){
-        char c[1];
+        char c[2];
         c[0] = seged[i][k] + 48;
+        c[1] = '\0';
         strcat(buff2,c);
     }
+    
     
     sprintf(buff3, " Modositva: %d",(int)has_changed);
     //printf("%s\n",buff1);
@@ -141,7 +143,7 @@ void*start_routine(void * arg){
             }
         }
 
-        //printThreadInfo(tp->index,tp->size,step,has_changed);
+        printThreadInfo(tp->index,tp->size,step,has_changed);
 
         if(has_changed){
             sem_wait(&mod_semaphore);
@@ -154,7 +156,7 @@ void*start_routine(void * arg){
         *(tp->_actWorker) = *(tp->_actWorker) - 1;
         if(*(tp->_actWorker) == 0){
 
-            sem_wait(&mod_semaphore);
+            //sem_wait(&mod_semaphore);
 
             if(*(tp->_mod) == 1){
                 copy(matrix,seged,tp->size);
@@ -163,7 +165,7 @@ void*start_routine(void * arg){
                 *(tp->_mod) = -1;
             }
 
-            sem_post(&mod_semaphore);
+            //sem_post(&mod_semaphore);
             sem_post(&s1);
         }
         sem_post(&nrActWorker_semaphore);
@@ -237,8 +239,6 @@ int main(int argc, char* argv[]){
         sem_post(&mod_semaphore);
 
         //todo
-        sleep(0.5);
-        system("cls");
         printMatrix(matrix,N);
         sem_wait(&mod_semaphore);
         sem_wait(&nrActWorker_semaphore);
