@@ -1,0 +1,177 @@
+==1978== Memcheck, a memory error detector
+==1978== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1978== Using Valgrind-3.15.0-608cb11914-20190413 and LibVEX; rerun with -h for copyright info
+==1978== Command: ./p 100000 10
+==1978== Parent PID: 357
+==1978== 
+--1978-- 
+--1978-- Valgrind options:
+--1978--    --leak-check=full
+--1978--    --show-leak-kinds=all
+--1978--    --track-origins=yes
+--1978--    --verbose
+--1978--    --log-file=valgrind-out.txt
+--1978-- Contents of /proc/version:
+--1978--   Linux version 5.15.74.2-microsoft-standard-WSL2 (oe-user@oe-host) (x86_64-msft-linux-gcc (GCC) 9.3.0, GNU ld (GNU Binutils) 2.34.0.20200220) #1 SMP Wed Nov 2 19:50:29 UTC 2022
+--1978-- 
+--1978-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-ssse3-avx-avx2-bmi-f16c-rdrand
+--1978-- Page sizes: currently 4096, max supported 4096
+--1978-- Valgrind library directory: /usr/lib/x86_64-linux-gnu/valgrind
+--1978-- Reading syms from /home/keim2152/repos/pop/lab6/p
+--1978-- Reading syms from /usr/lib/x86_64-linux-gnu/ld-2.31.so
+--1978--   Considering /usr/lib/debug/.build-id/45/87364908de169dec62ffa538170118c1c3a078.debug ..
+--1978--   .. build-id is valid
+--1978-- Reading syms from /usr/lib/x86_64-linux-gnu/valgrind/memcheck-amd64-linux
+--1978--    object doesn't have a symbol table
+--1978--    object doesn't have a dynamic symbol table
+--1978-- Scheduler: using generic scheduler lock implementation.
+--1978-- Reading suppressions file: /usr/lib/x86_64-linux-gnu/valgrind/default.supp
+==1978== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-1978-by-keim2152-on-???
+==1978== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-1978-by-keim2152-on-???
+==1978== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-1978-by-keim2152-on-???
+==1978== 
+==1978== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==1978== don't want to do, unless you know exactly what you're doing,
+==1978== or are doing some strange experiment):
+==1978==   /usr/lib/x86_64-linux-gnu/valgrind/../../bin/vgdb --pid=1978 ...command...
+==1978== 
+==1978== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==1978==   /path/to/gdb ./p
+==1978== and then give GDB the following command
+==1978==   target remote | /usr/lib/x86_64-linux-gnu/valgrind/../../bin/vgdb --pid=1978
+==1978== --pid is optional if only one valgrind process is running
+==1978== 
+--1978-- REDIR: 0x4022e20 (ld-linux-x86-64.so.2:strlen) redirected to 0x580c9ce2 (???)
+--1978-- REDIR: 0x4022bf0 (ld-linux-x86-64.so.2:index) redirected to 0x580c9cfc (???)
+--1978-- Reading syms from /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_core-amd64-linux.so
+--1978--    object doesn't have a symbol table
+--1978-- Reading syms from /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so
+--1978--    object doesn't have a symbol table
+==1978== WARNING: new redirection conflicts with existing -- ignoring it
+--1978--     old: 0x04022e20 (strlen              ) R-> (0000.0) 0x580c9ce2 ???
+--1978--     new: 0x04022e20 (strlen              ) R-> (2007.0) 0x0483f060 strlen
+--1978-- REDIR: 0x401f600 (ld-linux-x86-64.so.2:strcmp) redirected to 0x483ffd0 (strcmp)
+--1978-- REDIR: 0x4023380 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4843a20 (mempcpy)
+--1978-- Reading syms from /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0
+--1978--    object doesn't have a symbol table
+--1978-- Reading syms from /usr/lib/x86_64-linux-gnu/libc-2.31.so
+--1978--   Considering /usr/lib/debug/.build-id/18/78e6b475720c7c51969e69ab2d276fae6d1dee.debug ..
+--1978--   .. build-id is valid
+--1978-- Reading syms from /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+--1978--   Considering /usr/lib/debug/.build-id/c0/f40155b3f8bf8c494fa800f9ab197ebe20ed6e.debug ..
+--1978--   .. build-id is valid
+--1978-- Reading syms from /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+--1978--   Considering /usr/lib/debug/.build-id/7b/4536f41cdaa5888408e82d0836e33dcf436466.debug ..
+--1978--   .. build-id is valid
+--1978-- REDIR: 0x4935480 (libc.so.6:memmove) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4934780 (libc.so.6:strncpy) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x49357b0 (libc.so.6:strcasecmp) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x49340a0 (libc.so.6:strcat) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x49347e0 (libc.so.6:rindex) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4936c50 (libc.so.6:rawmemchr) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4951ce0 (libc.so.6:wmemchr) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4951820 (libc.so.6:wcscmp) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x49355e0 (libc.so.6:mempcpy) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4935410 (libc.so.6:bcmp) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4934710 (libc.so.6:strncmp) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4934150 (libc.so.6:strcmp) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4935540 (libc.so.6:memset) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x49517e0 (libc.so.6:wcschr) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4934670 (libc.so.6:strnlen) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4934230 (libc.so.6:strcspn) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4935800 (libc.so.6:strncasecmp) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x49341d0 (libc.so.6:strcpy) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4935950 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4952f50 (libc.so.6:wcsnlen) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4951860 (libc.so.6:wcscpy) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4934820 (libc.so.6:strpbrk) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4934100 (libc.so.6:index) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4934630 (libc.so.6:strlen) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x493dbb0 (libc.so.6:memrchr) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4935850 (libc.so.6:strcasecmp_l) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x49353d0 (libc.so.6:memchr) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4951930 (libc.so.6:wcslen) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4934ae0 (libc.so.6:strspn) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4935750 (libc.so.6:stpncpy) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x49356f0 (libc.so.6:stpcpy) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4936c90 (libc.so.6:strchrnul) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x49358a0 (libc.so.6:strncasecmp_l) redirected to 0x48311d0 (_vgnU_ifunc_wrapper)
+--1978-- REDIR: 0x4a1d500 (libc.so.6:__strrchr_avx2) redirected to 0x483ea10 (rindex)
+--1978-- REDIR: 0x4a1d6d0 (libc.so.6:__strlen_avx2) redirected to 0x483ef40 (strlen)
+--1978-- REDIR: 0x492f0e0 (libc.so.6:malloc) redirected to 0x483b780 (malloc)
+--1978-- REDIR: 0x492f6d0 (libc.so.6:free) redirected to 0x483c9d0 (free)
+--1978-- REDIR: 0x4a20b60 (libc.so.6:__memset_avx2_unaligned_erms) redirected to 0x48428e0 (memset)
+--1978-- REDIR: 0x4930b10 (libc.so.6:calloc) redirected to 0x483dce0 (calloc)
+--1978-- REDIR: 0x4a1d310 (libc.so.6:__strchrnul_avx2) redirected to 0x4843540 (strchrnul)
+--1978-- REDIR: 0x4a206c0 (libc.so.6:__mempcpy_avx_unaligned_erms) redirected to 0x4843660 (mempcpy)
+--1978-- REDIR: 0x492fe80 (libc.so.6:realloc) redirected to 0x483df30 (realloc)
+==1978== 
+==1978== HEAP SUMMARY:
+==1978==     in use at exit: 6,384 bytes in 13 blocks
+==1978==   total heap usage: 24 allocs, 11 frees, 8,043,768 bytes allocated
+==1978== 
+==1978== Searching for pointers to 13 not-freed blocks
+==1978== Checked 75,575,928 bytes
+==1978== 
+==1978== 8 bytes in 1 blocks are still reachable in loss record 1 of 5
+==1978==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1978==    by 0x485F24C: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==1978==    by 0x486FBAA: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==1978==    by 0x485D679: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==1978==    by 0x4011B99: call_init.part.0 (dl-init.c:72)
+==1978==    by 0x4011CA0: call_init (dl-init.c:30)
+==1978==    by 0x4011CA0: _dl_init (dl-init.c:119)
+==1978==    by 0x4001139: ??? (in /usr/lib/x86_64-linux-gnu/ld-2.31.so)
+==1978==    by 0x2: ???
+==1978==    by 0x1FFEFFFF92: ???
+==1978==    by 0x1FFEFFFF96: ???
+==1978==    by 0x1FFEFFFF9D: ???
+==1978== 
+==1978== 88 bytes in 1 blocks are still reachable in loss record 2 of 5
+==1978==    at 0x483B723: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1978==    by 0x483E017: realloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1978==    by 0x485F2AC: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==1978==    by 0x486E581: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==1978==    by 0x48658E0: GOMP_parallel (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==1978==    by 0x1095FC: generateData_parallel (in /home/keim2152/repos/pop/lab6/p)
+==1978==    by 0x10A342: parallel (in /home/keim2152/repos/pop/lab6/p)
+==1978==    by 0x10A67E: main (in /home/keim2152/repos/pop/lab6/p)
+==1978== 
+==1978== 192 bytes in 1 blocks are still reachable in loss record 3 of 5
+==1978==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1978==    by 0x485F24C: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==1978==    by 0x486D9A0: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==1978==    by 0x48658C9: GOMP_parallel (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==1978==    by 0x1095FC: generateData_parallel (in /home/keim2152/repos/pop/lab6/p)
+==1978==    by 0x10A342: parallel (in /home/keim2152/repos/pop/lab6/p)
+==1978==    by 0x10A67E: main (in /home/keim2152/repos/pop/lab6/p)
+==1978== 
+==1978== 2,592 bytes in 9 blocks are possibly lost in loss record 4 of 5
+==1978==    at 0x483DD99: calloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1978==    by 0x40149DA: allocate_dtv (dl-tls.c:286)
+==1978==    by 0x40149DA: _dl_allocate_tls (dl-tls.c:532)
+==1978==    by 0x4A96322: allocate_stack (allocatestack.c:622)
+==1978==    by 0x4A96322: pthread_create@@GLIBC_2.2.5 (pthread_create.c:660)
+==1978==    by 0x486DDEA: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==1978==    by 0x48658E0: GOMP_parallel (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==1978==    by 0x1095FC: generateData_parallel (in /home/keim2152/repos/pop/lab6/p)
+==1978==    by 0x10A342: parallel (in /home/keim2152/repos/pop/lab6/p)
+==1978==    by 0x10A67E: main (in /home/keim2152/repos/pop/lab6/p)
+==1978== 
+==1978== 3,504 bytes in 1 blocks are still reachable in loss record 5 of 5
+==1978==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1978==    by 0x485F24C: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==1978==    by 0x486D7FB: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==1978==    by 0x48658C9: GOMP_parallel (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==1978==    by 0x1095FC: generateData_parallel (in /home/keim2152/repos/pop/lab6/p)
+==1978==    by 0x10A342: parallel (in /home/keim2152/repos/pop/lab6/p)
+==1978==    by 0x10A67E: main (in /home/keim2152/repos/pop/lab6/p)
+==1978== 
+==1978== LEAK SUMMARY:
+==1978==    definitely lost: 0 bytes in 0 blocks
+==1978==    indirectly lost: 0 bytes in 0 blocks
+==1978==      possibly lost: 2,592 bytes in 9 blocks
+==1978==    still reachable: 3,792 bytes in 4 blocks
+==1978==         suppressed: 0 bytes in 0 blocks
+==1978== 
+==1978== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)

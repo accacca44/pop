@@ -1,0 +1,41 @@
+omp_hello.c - egy első példaprogram, amiben a paraméterként megadott számú
+              szál mindenike kiír egy szöveget, amiben szerepel a sorszáma 
+              a szálak száma (! a szálak számába a főszál -master- is
+              beleszámít)
+              megadott paraméter nélkül segmentation fault-ot ad
+omp_hello_err_chk.c - ugyanaz hibakezeléssel együtt
+
+trapez - integrálszámítás trapéz módszerrel (f(x)=x^2)
+     - trap.c - szekvenciális verzió (bekéri az a, b, n értékeket, ahol
+                a és b - az intervallum két végpontja
+                n részre -azaz n trapézra - osztjuk fel az intervallumot)
+     - omp_trap1.c - paraméterként adjuk meg a szálak számát
+                   - minden szál explicit módon kiszálmolja az
+                     intervallumot, amin dolgozik
+                   - critical direktíva az összegzéskor
+                   - csak akkor működik jól, ha n osztható a szálak számával
+     - omp_trap2a.c - paraméterként adjuk meg a szálak számát
+                    - ez a verzió "kézzel megírt" redukciót valósít meg a
+                      függvényhívás után
+                    - csak akkor működik jól, ha n osztható a szálak
+                      számával
+     - omp_trap2b.c - az előző verzióhoz hasonló, de reduction kikötést
+                      használ
+     - omp_trap3.c - parallel for direktívát használ
+
+pi 
+  - omp_pi.c
+     - a pi érték közelítő számítása OpenMP-vel, a 
+       pi = 4*[1 - 1/3 + 1/5 - 1/7 + 1/9 - . . . ]
+       formulát használva
+     - paraméterként meg kell adni a szálak számát, illetve a sorozat
+       kiszámolni kívánt elemeinek számát
+     - parallel for direktíva, redukciós változó, private kikötés
+fibonacci
+  - omp_fibo.c - Fibonacci sorozat első n elemét próbálja kiszámítani OpenMP-vel
+               - !!! hibás megoldás
+               - azt szemlélteti, hogy mi történik, ha (különböző iterációk
+                 közt fennálló) függőséget tartalmazó for ciklust párhuzamosítunk
+               - két paraméter: a szálak száma és a sorozat elemeinek száma
+               - megj.: ha a kimenet (véletlenül mégis) helyes, próbáljuk a
+                 szálak és/vagy az n értékét növelni
