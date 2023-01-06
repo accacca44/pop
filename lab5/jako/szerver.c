@@ -22,8 +22,8 @@ typedef struct data{
     int id; 
 }data;
 
-void* do_it_server(void* arg);
-void cleaning(int server_descriptor, int client_descriptor, char* client_query_name, int pid);
+void* routine(void* arg);
+void clean(int server_descriptor, int client_descriptor, char* client_query_name, int pid);
 
 
 int main(int argx, char** argv)
@@ -70,12 +70,12 @@ int main(int argx, char** argv)
 
             data_client[num_client].msg = msg_client;
             data_client[num_client].id = num_client;
-            pthread_create(&th[num_client], NULL, do_it_server, &data_client[num_client]);
+            pthread_create(&th[num_client], NULL, routine, &data_client[num_client]);
             num_client++;
         }
         else
         {
-            cleaning(qid, -1, "", getpid());
+            clean(qid, -1, "", getpid());
             exit(1);
         }
     }
@@ -85,14 +85,14 @@ int main(int argx, char** argv)
         pthread_join(th[i], NULL);       
     }
 
-    cleaning(qid, -1, servername, 0);
+    clean(qid, -1, servername, 0);
 
     free(data_client);
     free(th);
     exit(0);
 }
 
-void* do_it_server(void* arg){    
+void* routine(void* arg){    
     data* adat = (data*)arg;
     char shell[200];
     //sprintf(shell, "./shell.sh %s", adat->msg.allomanynev);
@@ -130,11 +130,11 @@ void* do_it_server(void* arg){
     mq_send(cmqid, (char*)&answer, sizeof(Client), 0);
     
     fprintf(stdout, "[%d] - Thread ended the prcess! Cleaning and Closing...\n", adat->id);
-    cleaning(-1, cmqid, "", adat->msg.pid);
+    clean(-1, cmqid, "", adat->msg.pid);
     return (void*) 0;
 }
 
-void cleaning(int server_descriptor, int client_descriptor, char* server_query_name, int pid)
+void clean(int server_descriptor, int client_descriptor, char* server_query_name, int pid)
 {
     if (server_descriptor != -1)
     {

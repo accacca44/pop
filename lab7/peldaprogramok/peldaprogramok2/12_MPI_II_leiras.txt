@@ -1,0 +1,25 @@
+Határozott integrálszámítás trapéz módszerrel
+Bemenet: a, b (az intervallum két végpontja), illetve n (ennyi részre bontjuk 
+az intervallumot). Az f függvény adott, f(x)=x^2
+  - mpi_trap3.c
+    - egy harmadik párhuzamos megközelítés
+    - a bemenetet a 0 sorszámú folyamat olvassa be (lásd Get_input
+      függvény), és üzenetszórással (három MPI_Bcast hívás) küldi el a többi
+      folyamatnak
+    - a részösszegek összegzése MPI_Reduce hívással történik
+  - mpi_trap4.c
+    - a különbség az előző változathoz képes annyi, hogy itt egyetlen
+      MPI_Bcast hívással küldük el mindhárom adatot, ehhez pedig létrehozunk
+      egy származtatott adattípust (lásd Build_mpi_type)
+
+mpi_vector_add.c
+  - két vektor összeadása párhuzamosan (z=x+y), blokkos szétosztást használva
+  - az MPI_Scatter, illetve MPI_Gather használatát példázza egyúttal
+    (a vektor mérete osztható kell legyen a folyamatok számával) - a feladat
+    külön hibakezelést is végez (lásd Check_for_error függvény)
+
+mpi_mat_vect_time.c
+  - mátrix-vektor szorzás
+  - időmérés példázása (MPI_Barrier használata, hogy az időmérés egyszerre
+    kezdődjön + MPI_Reduce - a leglassúbb folyamat meghatározására)
+    (szerepel még benne: MPI_Scatter, MPI_Gather, MPI_Allgather, MPI_Bcast)

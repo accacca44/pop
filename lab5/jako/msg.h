@@ -12,6 +12,8 @@ typedef struct
     char katalogusok[100];
 } Client;
 
-char* qname = "/szerver_";
+char* qname = "/server_";
+
+
 
 #endif

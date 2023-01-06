@@ -1,6 +1,7 @@
-//Nev: Jako Daniel
-//Azonosito: jdim2141
-//Csoport: 522/1
+//Nev: Kovacs Elek Akos
+//Azonosito: keim2152
+//Csoport: 522/2
+//Labor: lab5/3
 
 #include "msg.h"
 #include <stdlib.h>

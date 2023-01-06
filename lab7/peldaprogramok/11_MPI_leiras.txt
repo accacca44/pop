@@ -1,0 +1,47 @@
+Fordítás: gcc helyett mpicc (a többi paramétert ugyanúgy adjuk meg, mintha
+   gcc-vel fordítanánk. Tulajdonképpen az mpicc is a gcc-t fogja meghívni, 
+   csak hozzáadja még az MPI programok fordításhoz szükséges flageket, tehát
+   az mpicc nem egy fordítóprogram, csak egy C csomagoló -wrapper-)
+Futtatás: mpiexec -n <folyamatok száma> <végrehajtható állomány>
+
+
+- mpi_hello.c
+   - mindenik folyamat előállít egy üdvözlő szöveget, amiben szerepel az
+     illető folyamat sorszáma és a folyamatok száma is. A 0 sorszámú
+     folyamat írja ki az összes üzenetet, ezért a többi folyamat üzenetben
+     küldi el a szöveget a 0. folyamatnak. Mivel az a sorszámok növekvő
+     sorrendjében várja az üzeneteket, ezért a kiírás is a sorszámok növekvő
+     sorrendjében történik 
+
+- mpi_hello_rand.c
+  - ugyanaz, mint az előbbi, csak itt már nem feltétlenül sorrendben
+    történik a kiírás (ha mégis azt tapasztaljuk, hogy sorrendben írja ki,
+    próbálkozzunk több folyamattal -pl. 10-)
+
+trapez:
+  - trap.c 
+    - határozott integrál kiszámítása trapéz módszerrel, szekvenciális
+      megoldás. Bemenet: a, b (az intervallum két végpontja), illetve n
+      (ennyi részre bontjuk az intervallumot). Az f függvény adott, f(x)=x^2
+
+  - mpi_trap1.c
+   - egy első párhuzamos megoldás ugyanarra a feladatra, ahol minden egyes
+     folyamat egy-egy részösszeget számol ki (n/<folyamatok száma>
+     egymásutáni trapéznak a területét adja össze), ezt a részösszeget
+     elküldi a 0 sorszámú folyamatnak, amelyik összeadja a részeredményeket, 
+     kiszámítva a végső közelítő értéket.
+     Az a, b (az intervallum két végpontja), ileltve n (ahány részre az
+     intervallumot felbontjuk) értékek itt előre meg vannak adva:  a=0.0, b=3.0,
+     n=1024 (az eredmény csak akkor helyes, ha a folyamatok száma osztja az
+     1024-et)
+
+  - mpi_trap2.c
+   - a változás az előző verzióhoz képest annyi, hogy a bemenetet ezúttal
+     beolvassuk: a 0 sorszámú foylamat fogja beolvasni az a, b, n értékeket,
+     és elküldi azokat a többi folyamatnak (lásd a Get_input függvényt) 
+
+
+  - mpi_output.c 
+   - nagyon egyszerű program, melyben minden folyamat ír a standard
+     kimenetre (a kimenetek sorrendje változó... legalábbis nagyobb
+     folyamatszám esetén)  
