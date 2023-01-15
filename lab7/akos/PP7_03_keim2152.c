@@ -121,9 +121,7 @@ int main(void)
 	int my_rank;
 	unsigned int my_seed;
 	int korokSzama;
-
-
-	
+	int p;
 
 	MPI_Init(NULL,NULL);
 	MPI_Comm_size(MPI_COMM_WORLD,&comm_sz);
@@ -151,8 +149,9 @@ int main(void)
 
 		for(int i = 0; i < korokSzama;i++){
 			MPI_Recv(&player,1,MPI_INT,0,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-			
-			if(player == my_rank){
+			//MPI_Bcast(&p,1,MPI_INT,0,MPI_COMM_WORLD);
+			//player = p;
+			if(p == my_rank){
 				MPI_Recv(megoldas,TIP_SIZE,MPI_CHAR,0,1,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
 
 				//bevarom a tippeket
@@ -169,17 +168,17 @@ int main(void)
 				MPI_Send(points,comm_sz,MPI_INT,0,0,MPI_COMM_WORLD);
 
 				//kiiratom a pontokat
-				//for(int i = 0;i<comm_sz-1;i++)printf("%d",points[i]);
-				//printf("\n");
+				for(int i = 0;i<comm_sz-1;i++)printf("%d",points[i]);
+				printf("\n");
 			}	
 			else{
 				//generalom a tippeket
 				tipp = generateTips();
 				printf("[%d]%s\n",my_rank,tipp);
 
-				//printf("Round : %d | %d:[%s]\n",i+1,my_rank,tipp);
+				printf("Round : %d | %d:[%s]\n",i+1,my_rank,tipp);
 				//elkuldom a tippet a jatekosnak
-				MPI_Gather(tipp,MAX_TIP*TIP_SIZE,MPI_CHAR,allTipp,MAX_TIP*TIP_SIZE,MPI_CHAR,player,MPI_COMM_WORLD);
+				MPI_Gather(tipp,MAX_TIP*TIP_SIZE,MPI_CHAR,allTipp,MAX_TIP*TIP_SIZE,MPI_CHAR,p,MPI_COMM_WORLD);
 			}
 
 			MPI_Barrier(MPI_COMM_WORLD);
@@ -210,7 +209,7 @@ int main(void)
 		//szimulalom a koroket
 		for(int i = 0; i < korokSzama;i++){
 			fflush (stdout);
-			printf("\nUj Jatek %d\n\n",korokSzama);
+			printf("\nUj Jatek %d of %d\n\n",i+1,korokSzama);
 
 
 			//generalom a kitalalando szot
@@ -221,7 +220,7 @@ int main(void)
 			//generalom a jatekost, nem lehet a 0.as
 			int jatekos = rand_r(&my_seed)%(comm_sz-1)+1;
 			fflush (stdout);
-			printf("JatekMester generalta: %d jatekos mutogatja: %s\n",jatekos,megfejtes);
+			printf("0. generalta: %d jatekos mutogatja: %s\n",jatekos,megfejtes);
 
 			MPI_Bcast(&korokSzama,1,MPI_INT,0,MPI_COMM_WORLD);
 
@@ -235,10 +234,10 @@ int main(void)
 			
 			//a 0. folyamat is elkuldi a tippet amit nem vesznek figyelembe
 			tipp = generateTips();
-			//printf("\n0. tipp : %s\n",tipp);
+			printf("\n0. tipp : %s\n",tipp);
 			printf("[%d]%s\n",my_rank,tipp);
 
-			MPI_Gather(tipp,MAX_TIP*TIP_SIZE,MPI_CHAR,allTipp,MAX_TIP*TIP_SIZE,MPI_CHAR,jatekos,MPI_COMM_WORLD);
+			MPI_Gather(tipp,MAX_TIP*TIP_SIZE,MPI_CHAR,allTipp,MAX_TIP*TIP_SIZE,MPI_CHAR,p,MPI_COMM_WORLD);
 
 			int*currentPoints = (int*)calloc(comm_sz,sizeof(int));
 			MPI_Recv(currentPoints,comm_sz,MPI_INT,jatekos,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
